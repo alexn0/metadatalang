@@ -125,7 +125,7 @@ First, we would like to keep the information about how the object was created. T
 1-st construction:
 ```
 interface SimpleObj: KtLazy {
-    fun value(f: Fn<Int>? = null): Int = pp(f) { 0 }
+    fun value(f: Sp<Int>? = null): Int = calc(f) { 0 }
 
     private class O: KtLazy.E(), SimpleObj
 
