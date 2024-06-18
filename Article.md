@@ -105,7 +105,7 @@ Now, it is clear how object cloning and making an object backed by another are i
 Indeed, for object cloning, it is enough to recreate the object using an interface proxy and clone the key-value map from the original object.
 To have an object backed by another object, we need to set the same key-value map for it as for the original object.
 
-As we promised, we'll now show you how to safely add a new field to the object created by the above pattern.
+As we promised, we'll now show you how to safely add a new field (in a new sense) to the object created by the above pattern.
 Indeed, it is as simple as creating an extension function for a class. See example,
 
 ```
@@ -186,7 +186,7 @@ the object initialization (i.e., which  happens in the curl block of the `postIn
 
 
 Regarding the other best practices, the reader can notice that the `calc` function should calculate the name of the calling function to get the name of the field. For better performance, we can explicitly define
-a field name in the `calc` function or use small unique hints (i.e., the `hint` argument) used in the `calc` function for optimizing the field name calculation. The same is true for other functions (`get`, `pp`, `pup`) of `KtLazy`, which is also used for defining fields and properties. The discussion about these functions is out of scope of this article, so for details, see the project code in the github repository.
+a field name in the `calc` function or use small unique hints (i.e., the `hint` argument) used in the `calc` function for optimizing the field name calculation. The same is true for other functions (`get`, `pp`, `pup`) of `KtLazy`, which are also used for defining fields and properties. The discussion about these functions is out of scope of this article, so for details, see the project code in the github repository (the link is at the end of the article).
 
 The other interesting question is how to use the encapsulation principle since private methods cannot be defined in interfaces. However, we can use the encapsulation principle even in interfaces. For example, we use encapsulation for some methods in `KtLazy`, using the technique of extension functions defined on specific objects. This is a technique different from the classical implementation of encapsulation, but it promotes full understanding and readability of what is going on in the code. For example, we can differentiate functions, private in a new sense, by their extension objects.
 
@@ -246,7 +246,7 @@ interface HelloWorld: KtLazy {
 
 By the above code, Spring DI should create a bean with the name `helloWorld` by calling the function `helloWorld`/`invoke` with arguments `msg`, `printer`, which were previously created by Spring as well, i.e., the `hellWorld` bean should be created with dependencies injected by Spring DI.
 
-The next paragraph is devoted to the Cake software pattern, and it is recommended to omit it for most readers since it is a bit of a complicated topic for novices.
+The next paragraph is devoted to the Cake software pattern, and is recommended to be omitted for most readers, at least until we present our variant of the Cake pattern for Kotlin, as it is a bit of a complicated topic for those who have never used the Scala language.
 
 The main part of the Cake pattern, which originated from Scala, is a registry component, i.e., an interface (with its implementation) with fields keeping dependencies, service objects, and which implements all other abstract components; every one of them (a) contains a field with its own service object, (b) defines their dependencies, other service objects, as provided using the specific syntax of Scala, and (c) contains their own service implementations in its internal classes, so they (these service implementations) can access their service dependencies in the outer classes, i.e., in their components. A registry object implements all components, providing implementations for all service interfaces; for that, it can use components' service implementations defined as their internal classes, or, in tests, it can use alternative implementations. Our technique can simplify Cake pattern implementation in Kotlin as the following:
 1) A registry interface implements all other abstract components.
@@ -329,6 +329,8 @@ interface Registry: AComponent, BComponent, CComponent {
 	override fun aService(): AService = get { AService(this) }
 	override fun bService(): BService = get { BService(this) }
 	override fun cService(): CService = get { CService(this) }
+	// The get function is used the same way as the calc function, but it remembers the result of its first invocation (i.e., the code that is in curl squares). 
+	// The calc recalculates it until the result is explicitly set. These functions (get, calc) are provided with different signatures in KtLazy for convenience (i.e., they are overloaded).
 
 	private class O: Registry
 
