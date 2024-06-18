@@ -1,4 +1,4 @@
-### A new technique to manage internal state of object, happened as embedding one language into Kotlin, shown to be easily integrated with Spring IoC and the Cake pattern, featuring a new style of programming
+## A new technique to manage internal state of object, happened as embedding one language into Kotlin, shown to be easily integrated with Spring IoC and the Cake pattern, featuring a new style of programming
 
 We will consider a new concept in programming, which was created as an embedding of another programming language into Kotlin, so it can be easily used in other Java-based languages. Using this new approach, we will show how it solves the problem of multiple inheritance by design, and for lovers of software design patterns, we will show how to implement the Cake pattern and to use Spring Dependency Injection as a very simple usage of the new technique. The main thing is that this new technique has a general purpose, so the domain of its usage coincides with one of any high-level programming language.
 
@@ -118,6 +118,8 @@ To summarize what we got until now, we have considered, at first approximation, 
 
 Next, we are going to consider the best practice of using the above pattern to avoid hidden problems in the code. After that, we consider integration with Spring IoC technology.
 
+## Best practices
+
 First, we would like to keep the information about how the object was created. The other thing is that there can be circular dependencies in the code. It can create a problem if we always use the fixed mapping `Map<Any, Map<String, Any?>>` to associate objects with their fields. Indeed, in this map we have to use weak references for keys and strong references for values, so using circular links can result in having keys in the values of the map, and it can prevent them from being garbage collected because this fixed mapping holds a strong reference for keys in this case. To avoid this problem and get the advantage of keeping the way an object was instantiated, it is recommended to use the following constructions:
 
 1-st construction:
@@ -189,6 +191,8 @@ Regarding the other best practices, the reader can notice that the `calc` functi
 a field name in the `calc` function or use small unique hints (i.e., the `hint` argument) used in the `calc` function for optimizing the field name calculation. The same is true for other functions (`get`, `pp`, `pup`) of `KtLazy`, which are also used for defining fields and properties. The discussion about these functions is out of scope of this article, so for details, see the project code in the github repository (the link is at the end of the article).
 
 The other interesting question is how to use the encapsulation principle since private methods cannot be defined in interfaces. However, we can use the encapsulation principle even in interfaces. For example, we use encapsulation for some methods in `KtLazy`, using the technique of extension functions defined on specific objects. This is a technique different from the classical implementation of encapsulation, but it promotes full understanding and readability of what is going on in the code. For example, we can differentiate functions, private in a new sense, by their extension objects.
+
+## Software patterns
 
 Now, we consider how to integrate with Spring IoC technology and talk about the Cake pattern. For integration with Spring DI, we can use configuration service bean using the annotations `@Component` and `@Bean`. See example: 
 ```
@@ -363,6 +367,8 @@ interface CService: AService, BService {
 ```
 
 As you see, we easily inject all dependencies applying initialization code which was previously kept in the `init` fields for `AService` and `BService`. It is simple, but there is a caveat of the approach. Before using this technique, you should check that all dependencies are eagerly injected into `AService` and `BService`, otherwise you risk creating `CService` not fully initialized. The last can happen in case of having circular dependencies, so we have to initialize some dependencies lazy. However, even in this case you can use the above technique by wrapping lazy dependencies into eager ones i.e. using wrappers which have an internal state initialized lazy and can be easily injected into `CService`.
+
+## Miscellaneous considerations
 
 
 As you can see, the core of our technique is managing internal state using a functional approach and sticking to default interfaces along with other simple rules, which can be used with inheritance, composition, and other patterns as we can do in any high-level programming language in a more or less effective way. Talking about the paradigm of the new approach, it is interesting to distinguish between the technical implementation of the new approach, which was already discussed, and how we came to this technique.
