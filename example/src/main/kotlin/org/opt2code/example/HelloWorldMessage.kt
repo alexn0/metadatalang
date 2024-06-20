@@ -4,16 +4,12 @@
 
 package org.opt2code.example
 
-import org.opt2code.code.KtLazy
-import org.opt2code.code.Sp
-import org.opt2code.code.postInit
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
 interface HelloWorldMessage {
 
     fun text() = "Hello world"
-
 
     class O : HelloWorldMessage
 

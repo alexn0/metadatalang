@@ -2,7 +2,7 @@
  * Copyright (c) 2024 opt2code.com aka alexn0. All Rights Reserved.
  */
 
-package org.opt2code.example.cake
+package org.opt2code.example.cakewithvalfields
 
 import org.opt2code.code.KtLazy
 import org.opt2code.code.Sp
@@ -10,13 +10,13 @@ import org.opt2code.code.postInit
 
 interface AComponent : BHolder, CHolder
 interface AHolder : KtLazy {
-    fun aService(): AService
+    val aService: AService
 }
 
 interface AService : AComponent {
     fun AService.reg(f: Sp<AComponent>? = null): AComponent = calc(f) { throw IllegalArgumentException() }
-    override fun bService(): BService = reg().bService()
-    override fun cService(): CService = reg().cService()
+    override val bService get() = reg().bService
+    override val cService get() = reg().cService
 
     //your service methods
 
@@ -32,13 +32,13 @@ interface AService : AComponent {
 
 interface BComponent : AHolder, CHolder
 interface BHolder : KtLazy {
-    fun bService(): BService
+    val bService: BService
 }
 
 interface BService : BComponent {
     fun BService.reg(f: Sp<BComponent>? = null): BComponent = calc(f) { throw IllegalArgumentException() }
-    override fun aService(): AService = reg().aService()
-    override fun cService(): CService = reg().cService()
+    override val aService get() = reg().aService
+    override val cService get() = reg().cService
 
     //your service methods
 
@@ -54,13 +54,13 @@ interface BService : BComponent {
 // CService dependencies are defined here
 interface CComponent : BHolder, AHolder
 interface CHolder : KtLazy {
-    fun cService(): CService
+    val cService: CService
 }
 
 interface CService : CComponent {
     fun CService.reg(f: Sp<CComponent>? = null): CComponent = calc(f) { throw IllegalArgumentException() }
-    override fun aService(): AService = reg().aService()
-    override fun bService(): BService = reg().bService()
+    override val aService get() = reg().aService
+    override val bService get()= reg().bService
 
     //your service methods
 
@@ -75,9 +75,9 @@ interface CService : CComponent {
 
 
 interface Registry : AComponent, BComponent, CComponent {
-    override fun aService(): AService = get { AService(this) }
-    override fun bService(): BService = get { BService(this) }
-    override fun cService(): CService = get { CService(this) }
+    override val aService get() = get { AService(this) }
+    override val bService get() = get { BService(this) }
+    override val cService get() = get { CService(this) }
 
     private class O : Registry
 

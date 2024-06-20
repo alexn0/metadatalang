@@ -14,9 +14,7 @@ interface HelloWorldMessage2 : KtLazy {
 
     fun text2(f: Sp<String>? = null) = calc(f) { "" }
 
-
     class O : HelloWorldMessage2
-
 
     @Component
     open class Def {

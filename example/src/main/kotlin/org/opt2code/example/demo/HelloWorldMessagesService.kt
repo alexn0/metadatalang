@@ -9,7 +9,7 @@ import org.opt2code.example.Printer
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
-interface HelloWorldMessages : HelloWorldMessage1, HelloWorldMessage2, HelloWorldMessage3, Printer {
+interface HelloWorldMessagesService : HelloWorldMessage1, HelloWorldMessage2, HelloWorldMessage3, Printer {
 
     fun print() {
         print(text1())
@@ -17,23 +17,20 @@ interface HelloWorldMessages : HelloWorldMessage1, HelloWorldMessage2, HelloWorl
         print(text3())
     }
 
-
-    class O() : HelloWorldMessages
-
+    class O() : HelloWorldMessagesService
 
     companion object : Def()
-
 
     @Component
     open class Def {
 
-        @Bean("helloWorldMessages")
+        @Bean("helloWorldMessagesService")
         open operator fun invoke(
                 m1: HelloWorldMessage1,
                 m2: HelloWorldMessage2,
                 m3: HelloWorldMessage3,
                 p: Printer
-        ): HelloWorldMessages = O().postInit<HelloWorldMessages> {
+        ): HelloWorldMessagesService = O().postInit<HelloWorldMessagesService> {
             m1.init()?.invoke(this)
             m2.init()?.invoke(this)
             m3.init()?.invoke(this)

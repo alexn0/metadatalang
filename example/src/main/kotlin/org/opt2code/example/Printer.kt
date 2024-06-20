@@ -12,7 +12,6 @@ interface Printer : KtLazy {
 
     fun print(message: String) = println(message)
 
-
     class O : Printer
 
     companion object : Def()

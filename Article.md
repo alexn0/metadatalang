@@ -379,7 +379,7 @@ Let's consider the possible applications of the pattern in writing bash scripts.
 
 Finally, we can come to a new notion, code as infrastructure (CaI)! The last means that we develop code that creates code for managing infrastructure. Indeed, it seems that we can use the new technique to develop new libraries for generating code for Terraform, Helm, or even for high-level languages like Java and Kotlin. As a result, it can potentially lower barriers for developers to use other languages, making it more simple since we can take advantage of the Kotlin ecosystem and don't have to learn specific languages but libraries.
 
-The code for using our technique as well as examples of its base usage are available here.
+The code for using our technique as well as examples of its basic usage are available here.
 
 
 Copyright (c) 2024 metadatalang.com aka alexn0. All Rights Reserved.
