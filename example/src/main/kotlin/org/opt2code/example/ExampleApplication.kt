@@ -12,22 +12,22 @@ import org.springframework.boot.runApplication
 
 
 @SpringBootApplication
-open class ExampleApplication: CommandLineRunner {
-	@Autowired
-	lateinit var helloWorld: HelloWorld
+open class ExampleApplication : CommandLineRunner {
+    @Autowired
+    lateinit var helloWorld: HelloWorld
 
-	@Autowired
-	lateinit var helloWorldMessages: HelloWorldMessages
+    @Autowired
+    lateinit var helloWorldMessages: HelloWorldMessages
 
-	override fun run(args: Array<String?>) {
-		println("Printing helloWorld message:")
-		helloWorld.printGreeting()
+    override fun run(args: Array<String?>) {
+        println("Printing helloWorld message:")
+        helloWorld.printGreeting()
         println("Printing helloWorldMessages:")
-		helloWorldMessages.print()
-	}
+        helloWorldMessages.print()
+    }
 
 }
 
 fun main(args: Array<String>) {
-	runApplication<ExampleApplication>(*args)
+    runApplication<ExampleApplication>(*args)
 }

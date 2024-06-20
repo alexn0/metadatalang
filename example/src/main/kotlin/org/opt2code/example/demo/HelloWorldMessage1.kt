@@ -10,20 +10,20 @@ import org.opt2code.code.postInit
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
-interface HelloWorldMessage1: KtLazy {
+interface HelloWorldMessage1 : KtLazy {
 
-	fun text1(f: Sp<String>? = null) = calc(f) { "" }
-
-
-	class O: HelloWorldMessage1
+    fun text1(f: Sp<String>? = null) = calc(f) { "" }
 
 
-	@Component
-	open class Def {
-		@Bean
-		open fun helloWorldMessage1(): HelloWorldMessage1 = O().postInit<HelloWorldMessage1>{
-			text1{"Hello world1"}
-		}
-	}
+    class O : HelloWorldMessage1
+
+
+    @Component
+    open class Def {
+        @Bean
+        open fun helloWorldMessage1(): HelloWorldMessage1 = O().postInit<HelloWorldMessage1> {
+            text1 { "Hello world1" }
+        }
+    }
 
 }

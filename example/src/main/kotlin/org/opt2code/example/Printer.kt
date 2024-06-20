@@ -8,20 +8,20 @@ import org.opt2code.code.KtLazy
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
-interface Printer: KtLazy {
+interface Printer : KtLazy {
 
-	fun print(message: String) = println(message)
+    fun print(message: String) = println(message)
 
 
-	class O: Printer
+    class O : Printer
 
-	companion object: Def()
+    companion object : Def()
 
-	@Component
-	open class Def {
-		@Bean("printer")
-		open operator fun invoke(): Printer = O()
-	}
+    @Component
+    open class Def {
+        @Bean("printer")
+        open operator fun invoke(): Printer = O()
+    }
 
 
 }

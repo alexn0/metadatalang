@@ -9,37 +9,37 @@ import org.opt2code.example.Printer
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
-interface HelloWorldMessages: HelloWorldMessage1, HelloWorldMessage2, HelloWorldMessage3, Printer {
+interface HelloWorldMessages : HelloWorldMessage1, HelloWorldMessage2, HelloWorldMessage3, Printer {
 
-	fun print() {
-		print(text1())
-		print(text2())
-		print(text3())
-	}
-
-
-	class O(): HelloWorldMessages
+    fun print() {
+        print(text1())
+        print(text2())
+        print(text3())
+    }
 
 
-	companion object: Def()
+    class O() : HelloWorldMessages
 
 
-	@Component
-	open class Def {
+    companion object : Def()
 
-		@Bean("helloWorldMessages")
-		open operator fun invoke(
-				m1: HelloWorldMessage1,
-				m2: HelloWorldMessage2,
-				m3: HelloWorldMessage3,
-				p: Printer
-		): HelloWorldMessages = O().postInit<HelloWorldMessages>{
-			m1.init()?.invoke(this)
-			m2.init()?.invoke(this)
-			m3.init()?.invoke(this)
-			p.init()?.invoke(this)
-		}
 
-	}
+    @Component
+    open class Def {
+
+        @Bean("helloWorldMessages")
+        open operator fun invoke(
+                m1: HelloWorldMessage1,
+                m2: HelloWorldMessage2,
+                m3: HelloWorldMessage3,
+                p: Printer
+        ): HelloWorldMessages = O().postInit<HelloWorldMessages> {
+            m1.init()?.invoke(this)
+            m2.init()?.invoke(this)
+            m3.init()?.invoke(this)
+            p.init()?.invoke(this)
+        }
+
+    }
 
 }

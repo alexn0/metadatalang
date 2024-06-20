@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 open class ExampleApplicationTests {
 
-	@Test
-	open fun contextLoads() {
-	}
+    @Test
+    open fun contextLoads() {
+    }
 
 }

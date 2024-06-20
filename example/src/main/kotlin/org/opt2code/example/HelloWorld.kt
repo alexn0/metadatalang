@@ -11,24 +11,26 @@ import org.springframework.context.annotation.Bean
 
 import org.springframework.stereotype.Component
 
-interface HelloWorld: KtLazy {
+interface HelloWorld : KtLazy {
 
-	fun printer(f: Sp<Printer>? = null): Printer = calc(f) { throw IllegalArgumentException() }
+    fun printer(f: Sp<Printer>? = null): Printer = calc(f) { throw IllegalArgumentException() }
 
-	fun message(f: Sp<HelloWorldMessage>? = null): HelloWorldMessage = calc(f) { throw IllegalArgumentException() }
+    fun message(f: Sp<HelloWorldMessage>? = null): HelloWorldMessage = calc(f) { throw IllegalArgumentException() }
 
-	fun printGreeting() { printer().print(message().text()) }
+    fun printGreeting() {
+        printer().print(message().text())
+    }
 
-	companion object: Def()
+    companion object : Def()
 
     @Component
-	open class Def {
-		@Bean("helloWorld")
-		open operator fun invoke(msg: HelloWorldMessage, printer: Printer): HelloWorld =
-				object : HelloWorld{}.postInit<HelloWorld> {
-					message { msg }
-					printer { printer }
-				}
-	}
+    open class Def {
+        @Bean("helloWorld")
+        open operator fun invoke(msg: HelloWorldMessage, printer: Printer): HelloWorld =
+                object : HelloWorld {}.postInit<HelloWorld> {
+                    message { msg }
+                    printer { printer }
+                }
+    }
 
 }
