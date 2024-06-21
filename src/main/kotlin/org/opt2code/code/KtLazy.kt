@@ -275,14 +275,14 @@ interface KtLazy {
     }
 
 
-    fun Util.upperFuncName(skip: Long = 1, max: Long = 10, hint: String? = null): String {
+    fun Util.upperFuncName(skip: Long = 1, max: Long = 10, hint: String? = null, filter: ((String) -> Boolean)? = null): String {
         if (hint != null) {
             hints()[hint]?.let { return it }
         }
         val extProxy = Proxies.state.get() as? KtLazy
         if (extProxy == null) {
             val methodName: String = StackWalker.getInstance().walk { frames ->
-                frames.limit(max).skip(skip).findFirst().map { it.methodName.nameForField() }.orElseThrow { NoSuchElementException() }
+                frames.limit(max).skip(skip).filter { filter?.invoke(it.nameForField()) ?: true }.findFirst().map { it.nameForField() }.orElseThrow { NoSuchElementException() }
             }
             return methodName.apply { hint?.let{ hints()[it] = this } }
         } else if(Proxy.isProxyClass(extProxy::class.java)) {
@@ -303,7 +303,7 @@ interface KtLazy {
                         }
                         res
                     }
-                }.findFirst().map { it.methodName.nameForField() }.orElseThrow { NoSuchElementException() }
+                }.filter { filter?.invoke(it.nameForField()) ?: true}.findFirst().map { it.nameForField() }.orElseThrow { NoSuchElementException() }
             }
             return methodName.apply { hint?.let{ hints()[it] = this } }
         } else {
@@ -405,8 +405,8 @@ typealias Sp<T> = Function0<T>
 typealias Fn<T> = Function1<T, T>
 
 
-private fun String.nameForField(): String {
-    return replace(Regex("(\\$\\d+)+$"), "").substringAfterLast('$')
+private fun StackWalker.StackFrame.nameForField(): String {
+    return methodName.replace(Regex("(\\$\\d+)+$"), "").substringAfterLast('$')
 }
 
 
