@@ -19,11 +19,17 @@ open class HelloWorldApplication : CommandLineRunner {
     @Autowired
     lateinit var helloWorldMessages: HelloWorldMessagesService
 
+    @Autowired
+    lateinit var helloWorldContext: HelloWorldContextService
+
     override fun run(args: Array<String?>) {
         println("Printing helloWorld message using HelloWorldService:")
         helloWorld.printGreeting()
+        println("Printing helloWorld messages using HelloWorldContextService:")
+        helloWorldContext.printGreeting()
         println("Printing helloWorld messages using HelloWorldMessagesService:")
         helloWorldMessages.print()
+
     }
     /*
 The output of the program would be:

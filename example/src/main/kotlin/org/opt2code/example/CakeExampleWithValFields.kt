@@ -8,8 +8,8 @@ import org.opt2code.code.KtLazy
 import org.opt2code.code.Sp
 import org.opt2code.code.postInit
 
-interface AComponent : BHolder, CHolder
-interface AHolder : KtLazy {
+interface AComponent : KtLazy, BHolder, CHolder
+interface AHolder {
     val aService: AService
 }
 
@@ -30,8 +30,8 @@ interface AService : AComponent {
 }
 
 
-interface BComponent : AHolder, CHolder
-interface BHolder : KtLazy {
+interface BComponent : KtLazy, AHolder, CHolder
+interface BHolder {
     val bService: BService
 }
 
@@ -52,8 +52,8 @@ interface BService : BComponent {
 }
 
 // CService dependencies are defined here
-interface CComponent : BHolder, AHolder
-interface CHolder : KtLazy {
+interface CComponent: KtLazy, BHolder, AHolder
+interface CHolder  {
     val cService: CService
 }
 

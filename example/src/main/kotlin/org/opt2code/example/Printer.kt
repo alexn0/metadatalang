@@ -6,6 +6,7 @@ package org.opt2code.example
 
 import org.opt2code.code.KtLazy
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
 interface Printer : KtLazy {
@@ -19,6 +20,7 @@ interface Printer : KtLazy {
     @Component
     open class Def {
         @Bean("printer")
+        @Primary
         open operator fun invoke(): Printer = O()
     }
 

@@ -46,7 +46,7 @@ interface HelloWorldService : KtLazyExt {
     var printer: Printer set(f) = setter(f); get() = getter()
 
     // added to demonstrate that we can use "val" property syntax as well
-    val message get(): HelloWorldMessage = getter()  // calling the inline function getter, see the code below
+    val message get() = getter<HelloWorldMessage>()  // calling the inline function getter, see the code below
 
     fun printGreeting() {
         printer.print(message.text())
