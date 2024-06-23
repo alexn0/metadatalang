@@ -14,20 +14,18 @@ import org.springframework.stereotype.Component
 // It is recommended to redefine KtLazy, so you can redefine and add convenience methods as we do now.
 interface KtLazyExt: KtLazy {
 
-    fun KtLazyExt.ignoredMethodNames() = get { hashSetOf("calc", "get", "pp", "pup", "default", "invokeWithArguments", "invoke") }
-
     fun <T> set(prop: KProperty0<T>, g: T) { map().put(prop.name, g) }
 
-    fun <T> calc(g: (() -> T)? = null, normalize: Fn<String>, hint: String? = null, f: (String) -> T) : T  =
+    fun <T> accessorCalc(g: (() -> T)? = null, normalize: Fn<String>, hint: String? = null, f: (String) -> T) : T  =
             calc(normalize(fieldName()), g, false, f)
 
-    fun <T> get(g: ((T) -> T)? = null, normalize: Fn<String>, hint: String? = null,  f: (String) -> T) : T =
+    fun <T> accessorGet(g: ((T) -> T)? = null, normalize: Fn<String>, hint: String? = null,  f: (String) -> T) : T =
             get(normalize(fieldName()), g, false, f)
 
-    fun <T> pp(g: ((T) -> T)? = null, normalize: Fn<String>, hint: String? = null, f: (String) -> T): T =
+    fun <T> accessorPp(g: ((T) -> T)? = null, normalize: Fn<String>, hint: String? = null, f: (String) -> T): T =
             pp(name = normalize(fieldName()), g = g, f = f)
 
-    fun <T> pup(g: (() -> T)? = null, normalize: Fn<String>, hint: String? = null, f: (String) -> T): T =
+    fun <T> accessorPup(g: (() -> T)? = null, normalize: Fn<String>, hint: String? = null, f: (String) -> T): T =
             pup(name = normalize(fieldName()), g = g, f = f)
 
     // this function is needed here not for beauty. if use "getter<T> { throw IllegalArgumentException() }" instead of "getter<T> { illegal() }",
@@ -36,8 +34,9 @@ interface KtLazyExt: KtLazy {
 
 }
 
+val accessorName =  Regex("^[g|s]et.+")
 
-inline fun KtLazyExt.fieldName(hint: String? = null) = Util.upperFuncName(hint = hint) { !ignoredMethodNames().contains(it) }
+inline fun KtLazyExt.fieldName(hint: String? = null) = Util.upperFuncName(hint = hint) { it.matches(accessorName) }
 
 
 
@@ -66,7 +65,7 @@ interface HelloWorldService : KtLazyExt {
 
 }
 
-inline fun <T> KtLazyExt.getter() = get<T>(null, {it.toFieldName()}){ illegal() }
-inline fun <T> KtLazyExt.getter(crossinline f: Sp<T>) = calc( null, {it.toFieldName()}, null) {f()} // if we need a default value
-inline fun <T> KtLazyExt.setter(f: T) { calc({f}, {it.toFieldName()}){ illegal() } }
+inline fun <T> KtLazyExt.getter(hint: String? = null) = accessorGet<T>(null, {it.toFieldName()}, hint){ illegal() }
+inline fun <T> KtLazyExt.getter(crossinline f: Sp<T>, hint: String? = null) = accessorCalc( null, {it.toFieldName()}, hint) {f()} // if we need a default value
+inline fun <T> KtLazyExt.setter(f: T, hint: String? = null) { accessorCalc({f}, {it.toFieldName()}, hint){ illegal() } }
 inline fun String.toFieldName(): String = substring(3).replaceFirstChar{it.lowercaseChar()}

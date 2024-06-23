@@ -16,8 +16,7 @@ interface KtLazyExtService: KtLazyExt {
     fun Private.factory(f: Sp<BeanFactory>? = null): BeanFactory = calc(f) { illegal()}
 }
 
-
-inline fun <reified T> KtLazyExtService.init() = get<T>(null, {it.toFieldName()}){
+inline fun <reified T> KtLazyExtService.init(hint: String? = null) = accessorGet<T>(null, {it.toFieldName()}, hint){
     Private.factory().getBean(T::class.java)
 }
 
